@@ -54,15 +54,13 @@ async def handle_reply_privet(message: Message):
     chat_id = message.chat.id
     now = int(time.time())
 
+    last = await get_cooldown(chat_id, from_user.id, target.id)
+    if last and now - last < COOLDOWN_SECONDS:
+        remaining = COOLDOWN_SECONDS - (now - last)
+        await message.answer(f"Вы уже передавали привет {target.first_name}.\nПодожди {remaining} сек ⏳")
+        return
+
     try:
-        # проверка кулдауна
-        last = await get_cooldown(chat_id, from_user.id, target.id)
-
-        if last and now - last < COOLDOWN_SECONDS:
-            remaining = COOLDOWN_SECONDS - (now - last)
-            await message.answer(f"Вы уже передавали привет {target.first_name}.\nПодожди {remaining} сек ⏳")
-            return
-
         # создаём пользователей
         await create_user_if_not_exists(chat_id, from_user.id)
         await create_user_if_not_exists(chat_id, target.id)
