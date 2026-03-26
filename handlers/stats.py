@@ -1,0 +1,40 @@
+from aiogram import Router
+from aiogram.types import Message
+from aiogram.filters import Command
+import logging
+
+from db.queries import create_user_if_not_exists, get_user_full
+
+logger = logging.getLogger(__name__)
+router = Router()
+
+
+@router.message(Command("stats"))
+async def stats_handler(message: Message):
+    chat_id = message.chat.id
+    user = message.from_user
+
+    if not user:
+        return
+
+    try:
+        await create_user_if_not_exists(chat_id, user.id)
+        data = await get_user_full(chat_id, user.id)
+
+        if not data:
+            await message.answer("Произошла ошибка в получении данных")
+            return
+
+        points, level, sent = data
+        name = user.first_name
+
+        await message.answer(
+            f"Статистика:\n"
+            f"👤 {name}\n"
+            f"🎯 Получено приветов: {points}\n"
+            f"📤 Отправлено приветов: {sent}"
+        )
+
+    except Exception:
+        logger.exception("Error in stats handler")
+        await message.answer("Произошла ошибка")
