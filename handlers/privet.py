@@ -1,7 +1,7 @@
 import time
 import logging
 
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 
 from db.queries import (
@@ -15,10 +15,17 @@ from db.queries import (
 router = Router()
 logger = logging.getLogger(__name__)
 
-COOLDOWN_SECONDS = 600  # 10 минут
+# Время перерыва для отправки привета
+COOLDOWN_SECONDS = 600
+
+# Список разрешённых наборов стикеров
+ALLOWED_STICKER_SETS = ("Privet4956")
+
+# Список разрешённых конкретных стикеров (по file_unique_id)
+ALLOWED_STICKERS = ()
 
 
-@router.message(F.text & (F.text.lower() == "привет"))
+@router.message()
 async def handle_reply_privet(message: Message):
     if not message.reply_to_message:
         return
@@ -31,6 +38,17 @@ async def handle_reply_privet(message: Message):
 
     if target.id == from_user.id:
         await message.answer("Нельзя отправлять привет самому себе")
+        return
+
+    is_text_privet = bool(message.text and message.text.lower() == "привет")
+    is_sticker_privet = False
+    if message.sticker:
+        if message.sticker.set_name in ALLOWED_STICKER_SETS:
+            is_sticker_privet = True
+        elif message.sticker.file_unique_id in ALLOWED_STICKERS:
+            is_sticker_privet = True
+
+    if not (is_text_privet or is_sticker_privet):
         return
 
     chat_id = message.chat.id

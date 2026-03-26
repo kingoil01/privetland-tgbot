@@ -23,7 +23,7 @@ async def main():
 if __name__ == "__main__":
     handler = RotatingFileHandler(
         "bot.log",
-        maxBytes=1_000_000,  # 1 MB
+        maxBytes=2_000_000,  # 2 MB
         backupCount=3
     )
 
