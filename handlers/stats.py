@@ -22,19 +22,19 @@ async def stats_handler(message: Message):
         data = await get_user_full(chat_id, user.id)
 
         if not data:
-            await message.answer("Произошла ошибка в получении данных")
+            await message.answer("❌ Что-то пошло не так, попробуй позже")
             return
 
         points, level, sent = data
         name = user.first_name
 
         await message.answer(
-            f"Статистика:\n"
-            f"👤 {name}\n"
-            f"🎯 Получено приветов: {points}\n"
-            f"📤 Отправлено приветов: {sent}"
+            f"📊 Статистика <b>{name}</b>:\n\n"
+            f"📣 Отправлено: {sent}\n"
+            f"📬 Получено: {points}\n",
+            parse_mode="HTML"
         )
 
     except Exception:
         logger.exception("Error in stats handler")
-        await message.answer("Произошла ошибка")
+        await message.answer("❌ Что-то пошло не так, попробуй позже")

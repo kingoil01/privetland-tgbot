@@ -8,5 +8,6 @@ router = Router()
 @router.message(CommandStart())
 async def start_handler(message: Message):
     await message.answer(
-        "Привет! Отправь 'привет' ответом на сообщение другого человека 👋"
+        "Привет! Я помогаю передавать твои приветы 👋\n"
+        "Отправь 'Привет' ответом на сообщение другого человека 💌"
     )
