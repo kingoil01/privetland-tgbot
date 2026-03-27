@@ -35,7 +35,7 @@ async def handle_reply_privet(message: Message):
         return
 
     if target.id == from_user.id:
-        await message.answer("Нельзя отправлять привет самому себе")
+        await message.answer("Нельзя отправлять привет самому себе ❗️")
         return
 
     chat_id = message.chat.id
