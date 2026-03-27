@@ -28,7 +28,7 @@ async def handle_reply_privet(message: Message):
     if not is_greeting(message):
         return
 
-    from_user = message.frogitm_user
+    from_user = message.from_user
     target = message.reply_to_message.from_user
 
     if not from_user or not target:
