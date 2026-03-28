@@ -29,11 +29,15 @@ async def handle_reply_privet(message: Message):
     from_user = message.from_user
     target = message.reply_to_message.from_user
 
+    if target.is_bot:
+        await message.answer("❗Нельзя передавать привет боту 🤖")
+        return
+
     if not from_user or not target:
         return
 
     if target.id == from_user.id:
-        await message.answer("Нельзя отправлять привет самому себе ❗️")
+        await message.answer("❗Нельзя передавать привет самому себе 😐")
         return
 
     chat_id = message.chat.id
@@ -43,14 +47,14 @@ async def handle_reply_privet(message: Message):
     if last and now - last < COOLDOWN_SECONDS:
         remaining = COOLDOWN_SECONDS - (now - last)
         await message.answer(
-            f"Вы недавно передавали привет {target.first_name} 📌.\n"
+            f"Вы недавно передавали привет {target.first_name} 📌\n"
             f"Подождите {remaining} сек ⏳"
         )
         return
 
     try:
-        await create_user_if_not_exists(chat_id, from_user.id)
-        await create_user_if_not_exists(chat_id, target.id)
+        await create_user_if_not_exists(chat_id, from_user.id, from_user.first_name)
+        await create_user_if_not_exists(chat_id, target.id, target.first_name)
 
         await add_point(chat_id, target.id)
         await add_sent(chat_id, from_user.id)
