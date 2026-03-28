@@ -2,12 +2,13 @@ import aiosqlite
 from db.database import DB_PATH
 
 
-async def create_user_if_not_exists(chat_id: int, user_id: int):
+async def create_user_if_not_exists(chat_id: int, user_id: int, first_name: str = ""):
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute("""
-            INSERT OR IGNORE INTO user_stats (chat_id, user_id)
-            VALUES (?, ?)
-        """, (chat_id, user_id))
+            INSERT INTO user_stats (chat_id, user_id, first_name)
+            VALUES (?, ?, ?)
+            ON CONFLICT(chat_id, user_id) DO UPDATE SET first_name = excluded.first_name
+        """, (chat_id, user_id, first_name))
         await db.commit()
 
 
@@ -59,3 +60,16 @@ async def update_cooldown(chat_id: int, from_id: int, to_id: int, timestamp: int
             VALUES (?, ?, ?, ?)
         """, (chat_id, from_id, to_id, timestamp))
         await db.commit()
+
+
+async def get_leaderboard(chat_id: int, mode: str, limit: int = 10) -> list:
+    field = "points" if mode == "points" else "sent"
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute(f"""
+            SELECT first_name, {field}
+            FROM user_stats
+            WHERE chat_id = ?
+            ORDER BY {field} DESC
+            LIMIT ?
+        """, (chat_id, limit))
+        return await cursor.fetchall()

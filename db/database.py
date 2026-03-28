@@ -1,6 +1,6 @@
 import aiosqlite
 
-DB_PATH = "bot.db"
+DB_PATH = "data/bot.db"
 
 
 async def init_db():
@@ -10,6 +10,7 @@ async def init_db():
             CREATE TABLE IF NOT EXISTS user_stats (
                 chat_id INTEGER,
                 user_id INTEGER,
+                first_name TEXT DEFAULT '',
                 points INTEGER DEFAULT 0,
                 level INTEGER DEFAULT 1,
                 sent INTEGER DEFAULT 0,
