@@ -1,11 +1,9 @@
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-import logging
 
 from db.queries import create_user_if_not_exists, get_user_full
 
-logger = logging.getLogger(__name__)
 router = Router()
 
 
@@ -36,5 +34,4 @@ async def stats_handler(message: Message):
         )
 
     except Exception:
-        logger.exception("Error in stats handler")
         await message.answer("❌ Что-то пошло не так, попробуй позже")

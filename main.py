@@ -1,6 +1,4 @@
 import asyncio
-import logging
-from logging.handlers import RotatingFileHandler
 
 from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
@@ -21,15 +19,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    handler = RotatingFileHandler(
-        "bot.log",
-        maxBytes=2_000_000,  # 2 MB
-        backupCount=3
-    )
-
-    logging.basicConfig(
-        level=logging.INFO,
-        handlers=[handler],
-        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s"
-    )
     asyncio.run(main())

@@ -1,5 +1,4 @@
 import time
-import logging
 
 from aiogram import Router
 from aiogram.types import Message
@@ -14,7 +13,6 @@ from db.queries import (
 )
 
 router = Router()
-logger = logging.getLogger(__name__)
 
 # Время перерыва для отправки привета
 COOLDOWN_SECONDS = 120
@@ -64,5 +62,4 @@ async def handle_reply_privet(message: Message):
         )
 
     except Exception:
-        logger.exception("Error in creating user or adding point")
         await message.answer("❌ Что-то пошло не так, попробуй позже")
