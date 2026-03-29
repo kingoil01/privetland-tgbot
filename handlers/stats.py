@@ -16,7 +16,7 @@ async def stats_handler(message: Message):
         return
 
     try:
-        await create_user_if_not_exists(chat_id, user.id, user.first_name)
+        await create_user_if_not_exists(chat_id, user.id, user.first_name, user.username)
         data = await get_user_full(chat_id, user.id)
 
         if not data:
