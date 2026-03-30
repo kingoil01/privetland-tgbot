@@ -26,9 +26,6 @@ async def handle_cooldown(message: Message):
         hours, seconds = divmod(remaining, 3600)
         minutes = seconds // 60
         time_str = f"{hours} ч. {minutes} мин." if hours else f"{minutes} мин."
-        sent = await message.answer(f"До отправки следующего привета осталось {time_str} ⏳")
+        await message.answer(f"До отправки следующего привета осталось {time_str} ⏳")
     else:
-        sent = await message.answer("Вы можете отправить привет прямо сейчас! ✅")
-
-    await asyncio.sleep(3)
-    await sent.delete()
+        await message.answer("Вы можете отправить привет прямо сейчас! ✅")
