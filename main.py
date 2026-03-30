@@ -2,7 +2,7 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
-from handlers import start, privet, stats, leaderboard
+from handlers import start, privet, stats, leaderboard, cooldown
 from scheduler import setup_scheduler
 from db.database import init_db
 
@@ -15,6 +15,7 @@ async def main():
     dp.include_router(start.router)
     dp.include_router(stats.router)
     dp.include_router(leaderboard.router)
+    dp.include_router(cooldown.router)
     dp.include_router(privet.router)
 
     scheduler = setup_scheduler(bot)

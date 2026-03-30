@@ -2,6 +2,7 @@ import time
 
 from aiogram import Router, F, Bot
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+import asyncio
 
 from handlers.greet_check import is_greeting
 from db.queries import (
@@ -46,8 +47,12 @@ async def _send_greet(
         remaining = COOLDOWN_SECONDS - (now - last)
         hours, seconds = divmod(remaining, 3600)
         minutes = seconds // 60
-        time_str = f"{hours}ч {minutes}мин" if hours else f"{minutes}мин"
-        await message.answer(f"Вы недавно уже отправляли привет 📌\nПодождите ещё {time_str} ⏳")
+        time_str = f"{hours} ч. {minutes} мин." if hours else f"{minutes} мин."
+        sent = await message.answer(
+            f"Вы недавно уже отправляли привет 📌\nПодождите ещё {time_str} ⏳"
+        )
+        await asyncio.sleep(3)
+        await sent.delete()
         return
 
     try:
